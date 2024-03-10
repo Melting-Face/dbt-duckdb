@@ -9,7 +9,7 @@ project_config = ProjectConfig(dbt_project_path=project_dir)
 execution_config = ExecutionConfig(dbt_executable_path=dbt_executable_path)
 
 profile_config = ProfileConfig(
-    profiles_yml_filepath=project_dir,
+    profiles_yml_filepath=project_dir / "profiles.yml",
     profile_name="warehouse",
     target_name="dev",
 )
