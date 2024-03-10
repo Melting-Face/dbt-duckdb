@@ -6,7 +6,6 @@ x-common-airflow_variables: &airflow_variables
   - AIRFLOW__DATABASE__LOAD_DEFAULT_CONNECTIONS=False
   - AIRFLOW__CORE__TEST_CONNECTION=Enabled
   - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://dbt:dbt@db:5432/metastore
-  - AIRFLOW_UID=0
   - S3_ACCESS_KEY_ID=admin
   - S3_SECRET_ACCESS_KEY=admin1234
 
