@@ -1,0 +1,45 @@
+---
+version: "3.7"
+x-common-airflow_variables: &airflow_variables
+  - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+  - AIRFLOW__CORE__LOAD_EXAMPLES=False
+  - AIRFLOW__DATABASE__LOAD_DEFAULT_CONNECTIONS=False
+  - AIRFLOW__CORE__TEST_CONNECTION=Enabled
+  - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://dbt:dbt@db:5432/metastore
+  - SPARK_HOST=spark
+
+services:
+  airflow:
+    container_name: airflow
+    build: airflow
+    ports:
+      - "8080:8080"
+    command: ["standalone"]
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+    environment: *airflow_variables
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: postgres:14
+    ports:
+      - "25432:5432"
+    volumes:
+      - ./metastore:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=dbt
+      - POSTGRES_PASSWORD=dbt
+      - POSTGRES_DB=metastore
+  minio:
+    container_name: minio
+    build: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data:/data
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=admin1234

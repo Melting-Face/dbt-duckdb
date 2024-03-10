@@ -1,0 +1,79 @@
+---
+version: 2
+sources:
+  - name: bronze
+    schema: BRONZE
+    tables:
+      - name: price_economia_meat_becerros_subproductos
+        external:
+          location: 's3a://warehouse/price_economia_meat_becerros_subproductos/'
+          using: csv
+          options:
+            header: 'true'
+        columns:
+          - name: DATE
+            data_type: date
+          - name: IMPORT
+            data_type: string
+          - name: ORIGIN_COUNTRY
+            data_type: string
+          - name: EXPORT_COUNTRY
+            data_type: string
+          - name: IMPORT_COUNTRY
+            data_type: string
+          - name: SCHEDULE_B_CODE
+            data_type: string
+          - name: HS_CODE
+            data_type: string
+          - name: PRODUCT_DESCRIPTION
+            data_type: string
+          - name: BRAND
+            data_type: string
+          - name: HS_CODE_DESCRIPTION
+            data_type: string
+          - name: QUANTITY
+            data_type: double
+          - name: QUANTITY_UNIT
+            data_type: string
+          - name: TOTAL_PRICE_USD
+            data_type: double
+          - name: TOTAL_FOB_USD
+            data_type: double
+          - name: TOTAL_CIF_USD
+            data_type: double
+          - name: TRANSPORT
+            data_type: string
+          - name: PORT_OF_LOADING
+            data_type: string
+          - name: INCOTERMS
+            data_type: string
+          - name: CRAWLED_AT
+            data_type: timestamp
+  - name: common
+    tables:
+      - name: static_country_map
+        external:
+          location: 's3a://warehouse/static_country_map/'
+          using: parquet
+        columns:
+          - name: RAW_COUNTRY_NAME
+            data_type: string
+          - name: MAPPED_COUNTRY_CODE
+            data_type: string
+          - name: IS_MAPPED
+            data_type: boolean
+          - name: SOURCE
+            data_type: string
+  - name: integration
+    tables:
+      - name: trade_unit_lookup
+        external:
+          location: 's3a://warehouse/trade_unit_lookup/'
+          using: parquet
+        columns:
+          - name: RAW_UNIT
+            data_type: string
+          - name: MAPPED_UNIT
+            data_type: string
+          - name: STATUS
+            data_type: string
