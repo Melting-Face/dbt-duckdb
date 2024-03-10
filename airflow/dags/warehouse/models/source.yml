@@ -1,0 +1,8 @@
+---
+version: 2
+sources:
+  - name: external_source
+    tables:
+      - name: price_oae_pineapple
+        meta:
+          external_location: s3://warehouse/price_oae_pineapple/*.parquet
