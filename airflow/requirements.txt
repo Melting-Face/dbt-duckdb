@@ -1,4 +1,5 @@
 apache-airflow==2.7.3
+s3fs
 dbt-core
 dbt-duckdb
 astronomer-cosmos

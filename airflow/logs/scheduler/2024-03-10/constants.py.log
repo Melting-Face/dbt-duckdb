@@ -1944,3 +1944,9 @@ cosmos.exceptions.CosmosValueError: Either profiles_yml_filepath or profile_mapp
 [2024-03-10T18:30:33.091+0000] {logging_mixin.py:154} INFO - [2024-03-10T18:30:33.091+0000] {configuration.py:1050} WARNING - section/key [openlineage/namespace] not found in config
 [2024-03-10T18:30:33.248+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/constants.py
 [2024-03-10T18:30:33.268+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/constants.py took 0.233 seconds
+[2024-03-10T18:31:24.643+0000] {processor.py:157} INFO - Started process (PID=188) to work on /opt/airflow/dags/constants.py
+[2024-03-10T18:31:24.644+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/constants.py for tasks to queue
+[2024-03-10T18:31:24.645+0000] {logging_mixin.py:154} INFO - [2024-03-10T18:31:24.644+0000] {dagbag.py:536} INFO - Filling up the DagBag from /opt/airflow/dags/constants.py
+[2024-03-10T18:31:24.691+0000] {logging_mixin.py:154} INFO - [2024-03-10T18:31:24.691+0000] {configuration.py:1050} WARNING - section/key [openlineage/namespace] not found in config
+[2024-03-10T18:31:24.852+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/constants.py
+[2024-03-10T18:31:24.871+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/constants.py took 0.231 seconds
