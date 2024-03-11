@@ -6,3 +6,12 @@ sources:
       - name: price_oae_pineapple
         meta:
           external_location: "s3://warehouse/price_oae_pineapple/*.parquet"
+      - name: price_bashaier
+        meta:
+          external_location: "s3://warehouse/price_bashaier/*.parquet"
+      - name: price_agrishikyo
+        meta:
+          external_location: "s3://warehouse/price_agrishikyo/*.parquet"
+      - name: price_ctmarket
+        meta:
+          external_location: "s3://warehouse/price_ctmarket/*.parquet"
