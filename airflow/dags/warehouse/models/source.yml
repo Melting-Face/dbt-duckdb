@@ -5,4 +5,4 @@ sources:
     tables:
       - name: price_oae_pineapple
         meta:
-          external_location: s3://warehouse/price_oae_pineapple/*.parquet
+          external_location: "s3://warehouse/price_oae_pineapple/*.parquet"
