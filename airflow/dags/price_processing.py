@@ -6,7 +6,8 @@ from airflow.operators.empty import EmptyOperator
 with DAG(
     dag_id="price_processing",
     tags=["price"],
-    start_date=datetime.now(),
+    start_date=datetime(2024, 3, 15),
+    catchup=False,
     # schedule_interval="none",
 ):
     from configs import (

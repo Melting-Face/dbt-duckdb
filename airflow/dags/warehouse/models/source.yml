@@ -2,6 +2,7 @@
 version: 2
 sources:
   - name: bronze
+    schema: brozne
     tables:
       - name: price_oae_pineapple
         meta:

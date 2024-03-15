@@ -1,0 +1,105 @@
+version: 2
+
+models:
+  - name: price_union_price
+    description: "union price"
+    columns:
+      - name: _dbt_source_relation
+        data_type: varchar
+        description: ""
+
+      - name: source_id
+        data_type: float
+        description: ""
+
+      - name: country_id
+        data_type: varchar
+        description: ""
+
+      - name: type
+        data_type: varchar
+        description: ""
+
+      - name: product_raw
+        data_type: varchar
+        description: ""
+
+      - name: variety_raw
+        data_type: varchar
+        description: ""
+
+      - name: grade_raw
+        data_type: varchar
+        description: ""
+
+      - name: origin_raw
+        data_type: varchar
+        description: ""
+
+      - name: seller
+        data_type: varchar
+        description: ""
+
+      - name: brand
+        data_type: varchar
+        description: ""
+
+      - name: transport_type
+        data_type: varchar
+        description: ""
+
+      - name: unit_raw
+        data_type: varchar
+        description: ""
+
+      - name: currency
+        data_type: varchar
+        description: ""
+
+      - name: region_raw
+        data_type: varchar
+        description: ""
+
+      - name: date
+        data_type: date
+        description: ""
+
+      - name: crawled_at
+        data_type: bigint
+        description: ""
+
+      - name: memo
+        data_type: bigint
+        description: ""
+
+      - name: page_url
+        data_type: varchar
+        description: ""
+
+      - name: price_min
+        data_type: double
+        description: ""
+
+      - name: price_max
+        data_type: double
+        description: ""
+
+      - name: price_avg
+        data_type: double
+        description: ""
+
+      - name: open_quantity_value
+        data_type: double
+        description: ""
+
+      - name: sold_quantity_value
+        data_type: double
+        description: ""
+
+      - name: quantity_unit_raw
+        data_Type: varchar
+        description: ""
+
+      - name: remark
+        data_Type: varchar
+        description: ""
