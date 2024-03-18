@@ -1,5 +1,18 @@
 from datetime import datetime
 
+from configs import (
+    dbt_executable_path,
+    execution_config,
+    profile_config,
+    project_config,
+    project_dir,
+)
+from cosmos import (
+    DbtRunLocalOperator,
+    DbtTaskGroup,
+    RenderConfig,
+)
+
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 
@@ -10,19 +23,6 @@ with DAG(
     catchup=False,
     # schedule_interval="none",
 ):
-    from configs import (
-        dbt_executable_path,
-        execution_config,
-        profile_config,
-        project_config,
-        project_dir,
-    )
-    from cosmos import (
-        DbtRunLocalOperator,
-        DbtTaskGroup,
-        RenderConfig,
-    )
-
     s = EmptyOperator(task_id="start")
 
     dbt_silver_price_task_group = DbtTaskGroup(
