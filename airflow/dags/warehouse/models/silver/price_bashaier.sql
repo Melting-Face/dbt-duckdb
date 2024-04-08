@@ -5,31 +5,32 @@
 }}
 
 select
-    SOURCEID::float "SOURCE_ID",
-    try_cast(DATE::varchar as date) "DATE",
-    CRAWLEDAT::bigint "CRAWLED_AT",
+    sourceid::float "source_id",
+    try_cast(date::varchar as date) "date",
+    "المحصول"::varchar product_raw,
+    crawledat::bigint "crawled_at",
     case
         when try_cast("الحد الأدني" as double) <= 0 then null
         else try_cast("الحد الأدني" as double)
-    end as "PRICE_MIN",
+    end as "price_min",
     case
         when try_cast("الحد الأقصي" as double) <= 0 then null
         else try_cast("الحد الأقصي" as double)
-    end as "PRICE_MAX",
+    end as "price_max",
     case
         when try_cast("المتوسط" as double) <= 0 then null
         else try_cast("المتوسط" as double)
-    end as "PRICE_AVG",
+    end as "price_avg",
     -- -- GUIDE CONSTANT
-    'EG' "COUNTRY_ID",
-    'EGP' "CURRENCY",
-    '1 kg'::varchar "UNIT_RAW",
-    'Cairo'::varchar "REGION_RAW",
-    'w' "TYPE",
-    'https://bashaier.net/pricing/market' "PAGE_URL"
+    'EG' "country_id",
+    'EGP' "currency",
+    '1 kg'::varchar "unit_raw",
+    'Cairo'::varchar "region_raw",
+    'w' "type",
+    'https://bashaier.net/pricing/market' page_url
 from
     {{ source('bronze', 'price_bashaier') }}
 where
-    PRICE_MIN is not null
-    or PRICE_MAX is not null
-    or PRICE_AVG is not null
+    price_min is not null
+    or price_max is not null
+    or price_avg is not null

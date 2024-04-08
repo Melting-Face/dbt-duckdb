@@ -23,7 +23,7 @@ with DAG(
     tags=["price"],
     start_date=datetime(2024, 3, 15),
     catchup=False,
-    # schedule_interval="none",
+    schedule_interval=None,
 ):
     start = EmptyOperator(task_id="start")
 
@@ -42,17 +42,6 @@ with DAG(
         execution_config=execution_config,
     )
 
-    dbt_silver_price_union_task = DbtRunLocalOperator(
-        task_id="dbt_silver_price_union_task",
-        project_dir=project_dir,
-        install_deps=True,
-        should_store_compiled_sql=True,
-        profile_config=profile_config,
-        dbt_executable_path=dbt_executable_path,
-        select="tag:silver,tag:price,tag:union",
-        trigger_rule=TriggerRule.ALL_DONE,
-    )
-
     dbt_silver_price_merge_task = DbtRunLocalOperator(
         task_id="dbt_silver_price_merge_task",
         project_dir=project_dir,
@@ -60,7 +49,7 @@ with DAG(
         should_store_compiled_sql=True,
         profile_config=profile_config,
         dbt_executable_path=dbt_executable_path,
-        select="tag:silver,tag:price,tag:merge",
+        select="merged_price",
     )
 
     dbt_gold_price_task_group = DbtTaskGroup(
@@ -80,7 +69,6 @@ with DAG(
     end = EmptyOperator(task_id="end")
 
     start >> dbt_silver_price_task_group
-    dbt_silver_price_task_group >> dbt_silver_price_union_task
-    dbt_silver_price_union_task >> dbt_silver_price_merge_task
+    dbt_silver_price_task_group >> dbt_silver_price_merge_task
     dbt_silver_price_merge_task >> dbt_gold_price_task_group
     dbt_gold_price_task_group >> end

@@ -5,16 +5,16 @@
 }}
 
 select
-    SOURCEID::float "SOURCE_ID",
-    trim(PRODUCT::varchar) "PRODUCT_RAW",
-    try_cast(PRICEAVG::varchar as float) "PRICE_AVG",
-    try_cast(DATE::varchar as date) "DATE",
-    CRAWLEDAT::bigint "CRAWLED_AT",
+    sourceid::float source_id,
+    trim(product::varchar) product_raw,
+    try_cast(priceavg::varchar as float) price_avg,
+    try_cast(date::varchar as date) "date",
+    crawledat::bigint crawled_at,
 
-    '1kg' "UNIT_RAW",
-    'JPY' "CURRENCY",
-    'JP' "COUNTRY_ID",
-    'w' "TYPE",
-    'https://www.agrishikyo.jp' "PAGE_URL"
+    '1kg' unit_raw,
+    'JPY' currency,
+    'JP' country_id,
+    'w' "type",
+    'https://www.agrishikyo.jp' "page_url"
 from
     {{ source('bronze', 'price_agrishikyo') }}
