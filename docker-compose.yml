@@ -6,6 +6,12 @@ x-common-airflow_variables: &airflow_variables
   - AIRFLOW__CORE__TEST_CONNECTION=Enabled
 
 services:
+  duck:
+    container_name: duck
+    build: duck
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "duck.py"]
   airflow:
     container_name: airflow
     build: airflow
@@ -15,6 +21,7 @@ services:
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
+      - ./warehouse:/opt/airflow/warehouse
     environment: *airflow_variables
   minio:
     container_name: minio

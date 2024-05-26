@@ -19,8 +19,8 @@ with st.form(key="query_form"):
             query += ';'
         try:
             st.write(query)
-            cursor.sql(query)
-            df = cursor.df()
+            cursor.execute(query)
+            df = cursor.fetch_df()
             st.write(df)
         except Exception as e:
             st.write(e)
