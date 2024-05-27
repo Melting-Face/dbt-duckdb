@@ -4,7 +4,7 @@ import streamlit as st
 st.title("Duck DB with streamlit :duck:")
 
 if "db" not in st.session_state:
-    st.session_state["db"] = ":memory:"
+    st.session_state["db"] = "./warehouse/dbt.duckdb"
 
 st.header(f"duckdb path : `{st.session_state['db']}`")
 
@@ -16,7 +16,13 @@ def get_cursor():
     return cursor
 
 
-cursor = get_cursor()
+@st.cache_data
+def get_df(cursor, query):
+    cursor.execute(query)
+    df = cursor.fetch_df()
+    return df
+
+
 with st.form(key="query_form"):
     query = st.text_area(label="query")
     submitted = st.form_submit_button("Enter")
@@ -25,6 +31,7 @@ with st.form(key="query_form"):
             query += ";"
         try:
             st.write(query)
+            cursor = get_cursor()
             cursor.execute(query)
             df = cursor.fetch_df()
             st.write(df)

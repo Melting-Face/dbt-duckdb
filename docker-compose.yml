@@ -12,6 +12,9 @@ services:
     ports:
       - "8501:8501"
     command: ["streamlit", "run", "duck.py"]
+    volumes:
+      - ./duck.py:/home/streamlit/duck.py
+      - ./warehouse:/home/streamlit/warehouse
   airflow:
     container_name: airflow
     build: airflow
