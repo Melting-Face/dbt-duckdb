@@ -1,0 +1,19 @@
+---
+version: 2
+sources:
+  - name: bronze
+    schema: brozne
+    tables:
+      - name: dipopen1405
+        meta:
+          external_location: 'read_csv("s3://warehouse/dbt/DIPOPEN-1405.csv")'
+      - name: dipopen1612
+        meta:
+          external_location: 'read_csv("s3://warehouse/dbt/DIPOPEN-1612.csv")'
+      - name: dipopen1622
+        meta:
+          external_location: 'read_csv("s3://warehouse/dbt/DIPOPEN-1622.csv")'
+      - name: "166386_2024_06_10"
+        meta:
+          external_location:
+            'read_csv("s3://warehouse/dbt/166386_2024_06_10.csv")'

@@ -1,9 +1,0 @@
----
-version: 2
-sources:
-  - name: bronze
-    schema: brozne
-    tables:
-      - name: child_age
-        meta:
-          external_location: 'read_csv("s3://warehouse/dbt/2024_05_22.csv")'

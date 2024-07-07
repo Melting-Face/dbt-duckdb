@@ -5,3 +5,6 @@ duckdb
 dbt-duckdb
 ipython
 astronomer-cosmos
+requests
+beautifulsoup4
+apache-airflow-providers-apache-spark
