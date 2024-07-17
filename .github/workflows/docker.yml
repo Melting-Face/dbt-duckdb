@@ -1,0 +1,19 @@
+---
+name: Docker Image CI
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the apache-airflow docker image
+        run: docker build airflow --tag apache-airflow:duckdb
+
+      - name: Build the apache-airflow docker image
+        run: docker build minio --tag minio:duckdb
