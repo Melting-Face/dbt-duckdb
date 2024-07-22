@@ -3,7 +3,8 @@ warehouse:
   outputs:
     dev:
       type: duckdb
-      path: s3://warehouse/dbt.duckdb
+      path: /tmp/dbt.duckdb
+      threads: 4
       filesystems:
         - fs: s3
           anon: false
