@@ -4,7 +4,6 @@ x-airflow-common: &airflow-common
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
-    - ./warehouse:/opt/airflow/warehouse
   depends_on: &airflow-depends-on
     redis:
       condition: service_healthy
@@ -25,6 +24,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__API__AUTH_BACKENDS:
       "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
     TZ: Asia/Seoul
+  platform: linux/amd64
 
 services:
   airflow-webserver:

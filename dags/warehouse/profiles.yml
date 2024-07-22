@@ -3,7 +3,7 @@ warehouse:
   outputs:
     dev:
       type: duckdb
-      path: /opt/airflow/warehouse/dbt.duckdb
+      path: s3://warehouse/dbt.duckdb
       filesystems:
         - fs: s3
           anon: false
