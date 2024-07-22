@@ -34,10 +34,10 @@ models:
   warehouse:
     # Config indicated by + and applies to all files under models/example/
     silver:
+      schema: silver
       +tags: silver
-      +schema: silver
       +materialized: table
     gold:
+      schema: gold
       +tags: gold
-      +schema: gold
       +materialized: table

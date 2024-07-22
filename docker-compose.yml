@@ -1,6 +1,6 @@
 ---
 x-airflow-common: &airflow-common
-  build: airflow
+  image: ghcr.io/melting-face/dbt-duckdb:main
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
