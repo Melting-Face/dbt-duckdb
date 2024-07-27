@@ -18,6 +18,7 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
@@ -33,6 +34,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   warehouse:
     # Config indicated by + and applies to all files under models/example/
+    bronze:
+      schema: bronze
+      +tags: bronze
+      +materialized: table
     silver:
       schema: silver
       +tags: silver

@@ -22,16 +22,18 @@ def dbt_seed_dag():
         project_dir=project_dir,
         profile_config=profile_config,
         dbt_executable_path=dbt_executable_path,
-        install_deps=False,
+        install_deps=True,
     )
 
     generate_dbt_docs_s3 = DbtDocsS3Operator(
         task_id="generate_dbt_docs_s3",
         bucket_name="warehouse",
+        folder_dir="target",
         connection_id="s3_conn_id",
         dbt_executable_path=dbt_executable_path,
         project_dir=project_dir,
         profile_config=profile_config,
+        install_deps=True,
     )
 
     seed >> generate_dbt_docs_s3

@@ -3,5 +3,4 @@ s3fs
 dbt-core
 duckdb
 dbt-duckdb
-ipython
 astronomer-cosmos

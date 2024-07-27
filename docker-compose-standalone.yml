@@ -1,0 +1,81 @@
+---
+x-airflow-common: &airflow-common
+  image: ghcr.io/melting-face/dbt-duckdb:main
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+  depends_on:
+    minio:
+      condition: service_healthy
+    postgres:
+      condition: service_healthy
+  environment: &airflow-environment
+    AIRFLOW__CORE__LOAD_EXAMPLES: false
+    AIRFLOW__DATABASE__LOAD_DEFAULT_CONNECTIONS: false
+    AIRFLOW__CORE__TEST_CONNECTION: Enabled
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN:
+      "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+    AIRFLOW__API__AUTH_BACKENDS:
+      "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
+    AIRFLOW__COSMOS__DBT_DOCS_DIR: "s3://warehouse/target"
+    AIRFLOW__COSMOS__DBT_DOCS_CONN_ID: "s3_conn_id"
+    TZ: Asia/Seoul
+  platform: linux/amd64
+
+services:
+  airflow-webserver:
+    container_name: airflow-webserver
+    <<: *airflow-common
+    ports:
+      - "8080:8080"
+    command: standalone
+    environment:
+      <<: *airflow-environment
+      _AIRFLOW_DB_MIGRATE: true
+      _AIRFLOW_WWW_USER_CREATE: true
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+
+  minio:
+    container_name: minio
+    build: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - ./data:/data
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=admin1234
+    restart: always
+
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - ./postgresql-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
