@@ -15,7 +15,7 @@ s3_hook = S3Hook(aws_conn_id="s3_conn_id")
 def weather_data_api_dag():
     @task
     def request_forecast_zone_information():
-        service_key = Variable.get("forecast_zone_information_service_key")
+        service_key = Variable.get("open_data_service_key")
         service_url = Variable.get("forecast_zone_information_service_url")
         params = {
             "serviceKey": service_key,

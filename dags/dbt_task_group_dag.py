@@ -15,7 +15,10 @@ def dbt_task_group_dag():
         group_id="silver",
         project_config=project_config,
         render_config=RenderConfig(
-            select=["forecast_zone_information"],
+            select=[
+                "forecast_zone_information",
+                "vilage_fcst_info_service_code",
+            ],
         ),
         execution_config=execution_config,
         operator_args={"install_deps": True},
@@ -23,5 +26,6 @@ def dbt_task_group_dag():
     )
 
     silver
+
 
 dbt_task_group_dag()

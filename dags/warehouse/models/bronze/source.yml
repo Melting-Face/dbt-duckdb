@@ -8,3 +8,7 @@ sources:
         meta:
           external_location:
             'read_parquet("s3://warehouse/dbt/forecast_zone_information.parquet.gzip")'
+      - name: vilage_fcst_info_service_code
+        meta:
+          external_location:
+            'read_csv("s3://warehouse/dbt/vilage_fcst_info_service_code.csv")'
