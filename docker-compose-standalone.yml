@@ -1,6 +1,6 @@
 ---
 x-airflow-common: &airflow-common
-  build: airflow
+  image: ghcr.io/melting-face/dbt-duckdb:main
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -25,6 +25,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER: "s3://airflow"
     AIRFLOW__LOGGING__REMOTE_LOG_CONN_ID: "s3_conn_id"
     TZ: Asia/Seoul
+  platform: linux/amd64
 
 services:
   airflow-webserver:
