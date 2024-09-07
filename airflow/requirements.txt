@@ -3,5 +3,6 @@ s3fs
 dbt-core==1.8.4
 duckdb==1.0.0
 dbt-duckdb==1.8.2
+airflow-provider-duckdb
 astronomer-cosmos==1.6.0
 PyPika==0.48.9
