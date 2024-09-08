@@ -28,8 +28,8 @@ x-airflow-common: &airflow-common
   platform: linux/amd64
 
 services:
-  airflow-webserver:
-    container_name: airflow-webserver
+  airflow-standalone:
+    container_name: airflow-standalone
     <<: *airflow-common
     ports:
       - "8080:8080"
