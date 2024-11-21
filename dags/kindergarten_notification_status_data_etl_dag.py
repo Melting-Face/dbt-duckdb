@@ -8,26 +8,26 @@ from pypika import Query, Table, Tuple
 
 from airflow.decorators import dag, task
 from airflow.models import Variable
-from airflow.providers.trino.hooks.trino import TrinoHook
-
-trino_hook = TrinoHook("trino-rabbit-conn-id")
-table_name = "kn_kindergarten_notification_general_status"
-key = Variable.get("kindergarten_notification_api_key")
-url = Variable.get("kindergarten_notification_api_url")
+from duckdb_provider.hooks.duckdb_hook import DuckDBHook
 
 
 @dag(
     schedule=None,
     start_date=datetime(2024, 9, 20, tz="Asia/Seoul"),
     catchup=False,
-    max_active_tasks=3,
+    max_active_tasks=1,
     # on_failure_callback=on_failure_callback_slack_webhook,
 )
 def kindergarten_notification_status_data_etl_dag():
+    hook = DuckDBHook.get_hook("duckdb_conn_id")
+    table_name = "kn_kindergarten_notification_general_status"
+    key = Variable.get("kindergarten_notification_api_key")
+    url = Variable.get("kindergarten_notification_api_url")
+
     @task
     def drop_kindergarten_notification_table_if_exists():
         query = f"drop table if exists kidsnote.{table_name}"
-        result = trino_hook.get_first(query)
+        result = hook.get_first(query)
         print(result)
 
     @task
@@ -70,7 +70,7 @@ def kindergarten_notification_status_data_etl_dag():
             city_code integer
         )
         """
-        result = trino_hook.get_first(query)
+        result = hook.get_first(query)
         print(result)
 
     @task
@@ -81,7 +81,7 @@ def kindergarten_notification_status_data_etl_dag():
             .select(table.state_code, table.city_code)
             .get_sql(quote_char=None)
         )
-        result = trino_hook.get_records(query)
+        result = hook.get_records(query)
         print(result)
         return result
 
@@ -127,7 +127,7 @@ def kindergarten_notification_status_data_etl_dag():
         values {','.join(rows)}
         """
 
-        result = trino_hook.get_first(query)
+        result = hook.get_first(query)
         print(result)
 
     drop_table = drop_kindergarten_notification_table_if_exists()

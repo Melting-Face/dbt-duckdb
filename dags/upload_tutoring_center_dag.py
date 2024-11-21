@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 from duckdb_provider.hooks.duckdb_hook import DuckDBHook
 from pendulum import datetime
+from pypika import Tuple
 
 from airflow.models import Variable
 from airflow.decorators import dag, task
@@ -14,13 +15,15 @@ from constants import tutoring_center_codes
     schedule=None,
     start_date=datetime(2024, 9, 7, tz="UTC"),
     catchup=False,
-    max_active_tasks=3,
+    max_active_tasks=1,
 )
 def upload_tutoring_center_dag():
     hook = DuckDBHook.get_hook("duckdb_conn_id")
     table_name = "kn_centers_tutoring_center"
-# KEY = Variable.get("tutoring_center_api_key")
-# url = Variable.get("tutoring_center_api_url")
+
+    KEY = Variable.get("tutoring_center_api_key")
+    url = Variable.get("tutoring_center_api_url")
+
     @task
     def drop_tutoring_center_table_if_exists():
         query = f"drop table if exists {table_name}"
@@ -61,36 +64,81 @@ def upload_tutoring_center_dag():
         result = hook.get_first(query)
         print(result)
 
+    @task
+    def get_indexes(tutoring_center_code: str) -> int:
+        params = {
+            "KEY": KEY,
+            "Type": "json",
+            "pIndex": 1,
+            "pSize": 1,
+            "ATPT_OFCDC_SC_CODE": tutoring_center_code,
+        }
+        response = requests.get(
+            url=url,
+            params=params,
+        )
+        json = response.json()
+        sleep(0.5)
+        list_total_count = json["acaInsTiInfo"][0]["head"][0]["list_total_count"]
+        total_index = math.ceil(list_total_count / 1000)
+        return [i for i in range(1, total_index + 1)]
 
-    # @task
-    # def get_indexes(tutoring_center_code: str) -> int:
-    #     params = {
-    #         "KEY": KEY,
-    #         "Type": "json",
-    #         "pIndex": 1,
-    #         "pSize": 1,
-    #         "ATPT_OFCDC_SC_CODE": tutoring_center_code,
-    #     }
-    #     response = requests.get(
-    #         url=url,
-    #         params=params,
-    #     )
-    #     json = response.json()
-    #     sleep(0.5)
-    #     list_total_count = json["acaInsTiInfo"][0]["head"][0]["list_total_count"]
-    #     total_index = math.ceil(list_total_count / 1000)
-    #     return list(range(1, total_index + 1))
+    @task
+    def get_df_from_tutoring_center_api(
+        tutoring_center_code: str,
+        index: int,
+    ) -> pd.DataFrame:
+        params = {
+            "KEY": KEY,
+            "Type": "json",
+            "pIndex": index,
+            "pSize": 1000,
+            "ATPT_OFCDC_SC_CODE": tutoring_center_code,
+        }
+        response = requests.get(
+            url=url,
+            params=params,
+        )
+        json = response.json()
+        sleep(0.5)
+        rows = json["acaInsTiInfo"][1]["row"]
+        df = pd.DataFrame(rows)
+        df[["TOFOR_SMTOT", "DTM_RCPTN_ABLTY_NMPR_SMTOT"]] = df[
+            ["TOFOR_SMTOT", "DTM_RCPTN_ABLTY_NMPR_SMTOT"]
+        ].fillna(0)
+        df = df.fillna("")
+        return df
 
+    @task
+    def insert_df_into_rabbit(df: pd.DataFrame):
+        columns = list(df.columns)
+        rows = df.to_numpy().tolist()
+        rows = [Tuple(*row).get_sql(quote_char=None) for row in rows]
+        query = f"""
+        insert into {table_name} ({','.join(columns)})
+        values {','.join(rows)}
+        """
+
+        result = hook.get_first(query)
+        print(result)
 
     drop_table = drop_tutoring_center_table_if_exists()
     create_table = create_tutoring_center_table_if_not_exists()
 
-
     drop_table >> create_table
 
+    for tutoring_center_code in tutoring_center_codes:
+        indexes = get_indexes(tutoring_center_code=tutoring_center_code)
 
-    # codes = get_tutoring_center_code()
-    # get_df.expand(code=codes)
+        # get df from tutoring_center_api
+        dfs = get_df_from_tutoring_center_api.partial(
+            tutoring_center_code=tutoring_center_code,
+        ).expand(index=indexes)
+
+        insert_df_into_rabbit.expand(df=dfs)
+
+        create_table >> indexes
+        indexes >> dfs
 
 
 upload_tutoring_center_dag()
